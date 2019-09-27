@@ -1,0 +1,66 @@
+@font-face {
+  font-family: 'MarkPro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/MarkPro.woff'); /* IE9 Compat Modes */
+  src: local('MarkPro'), local('MarkPro'),
+       url('../assets/fonts/MarkPro.woff') format('woff2'), /* Super Modern Browsers */
+       url('../assets/fonts/MarkPro.woff') format('woff'), /* Modern Browsers */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'MarkPro';
+  font-weight: bold;
+  font-style: bold;
+  background-color: $white;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  font-family: 'MarkPro';
+  margin: 0px;
+}
+
+.App {
+  display: table;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  .content {
+    display: table-cell;
+    vertical-align: middle;
+    margin: auto;
+    width: 550px;
+    height: 600px;
+    padding: 0px 20px;
+    margin-bottom: 72px;
+
+    .ant-layout {
+      background-color: $white;
+    }
+
+    .ant-layout-header {
+      background-color: $white;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .invalid_msg {
+      color: $red;
+    }
+
+    .success_msg {
+      color: $btn-bg-color;
+    }
+
+    .selected {
+      background-color: $btn-bg-color !important;
+      color: $white !important;
+      border: none !important;
+    }
+  }
+}

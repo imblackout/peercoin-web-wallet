@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'MarkPro';
+    src: url('MarkPro.woff2') format('woff2'),
+        url('MarkPro.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+

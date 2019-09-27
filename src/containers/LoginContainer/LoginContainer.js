@@ -69,7 +69,7 @@ class LoginContainer extends PureComponent {
   increase = () => {
 
     const percent = this.state.percent;
-    var increment = this.state.percent + 1;
+    var increment = this.state.percent + 0.5;
 
     if ( percent == MAX_PERCENTAGE ) {
       return percent;
@@ -87,24 +87,24 @@ class LoginContainer extends PureComponent {
           <Content className="main">
             <div className="pulse"></div>
             <CircularProgressbarWithChildren value={this.getPercent()}
-                    strokeWidth={0.5}
+                    strokeWidth={0.3}
                     styles={buildStyles({
                       textColor: 'black',
-                      pathColor: '#3cb054',
-                      trailColor: 'white',
+                      pathColor: 'white',
+                      trailColor: '#3cb054',
                     })}
                   >
                     {/* Put any JSX content in here that you'd like. It'll be vertically and horizonally centered. */}
                     <img
                       style={{ width: this.state.leaf_size , marginTop: -5 }}
-                      src="https://www.peercoin.net/img/logos/icononly/outsidecircle/Transparent/GreenLeaf/peercoin-leaf-green-transparent.svg"
+                      src="https://www.peercoin.net/img/logos/icononly/outsidecircle/Transparent/WhiteLeaf/peercoin-leaf-white-transparent.svg"
                       alt="peercoin"
                     />
             </CircularProgressbarWithChildren>
 
             <Row className="wallet_btn_area">
               <Col className="wallet_label center" sm={{ span: 12, offset: 6 }}>
-                <span>{this.getPercent()}% Completed</span>
+                <span>Updating blockchain</span>
                 <button onClick={this.increase}></button>
               </Col>
             </Row>

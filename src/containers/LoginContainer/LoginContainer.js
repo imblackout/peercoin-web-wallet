@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Layout } from 'antd';
 import axios from "axios";
+import Peercoin from './Peercoin';
 
 import {
   CircularProgressbarWithChildren,
@@ -15,13 +16,15 @@ const MAX_SET_INTERVAL = 1000;
 
 class LoginContainer extends PureComponent {
 
+  peercoin = null
+
   constructor(props) {
     super(props);
     this.state = {
 
       // Show percentage on circular display
       // Default at 0
-      percentage: 100,
+      percentage: 0,
       
       // In px
       leaf_size: 200,
@@ -34,6 +37,9 @@ class LoginContainer extends PureComponent {
       errorMessage:null,
       errorStatus:null
     };
+
+    this.peercoin = new Peercoin("http://192.168.0.120:9902");
+    this.peercoin.getblockchaininfo();
 
     // Call RPC commands at MAX_SET_INTERVAL
     this.interval = setInterval(() => this.getblockchaininfo(), MAX_SET_INTERVAL);

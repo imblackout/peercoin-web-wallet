@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Layout } from 'antd';
+import axios from "axios";
 
 import {
-  CircularProgressbar,
   CircularProgressbarWithChildren,
   buildStyles,
 } from 'react-circular-progressbar';
@@ -11,73 +11,94 @@ import 'react-circular-progressbar/dist/styles.css';
 
 const { Content } = Layout;
 
-const MAX_PERCENTAGE = 100;
+const MAX_SET_INTERVAL = 1000;
 
 class LoginContainer extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      percent: 50,
+
+      // Show percentage on circular display
+      // Default at 0
+      percentage: 100,
+      
+      // In px
       leaf_size: 200,
-      data: null,
-      minting: null,
-      wallet: null
+
+      // API's result from RPC command line
+      blockchaininfo:null,
+      blocks:0,
+
+      // Peercoin's API error message
+      errorMessage:null,
+      errorStatus:null
     };
 
-    this.timeout = 1000;
-    this.timer = setInterval(() => this.refresh() , this.timeout);
+    // Call RPC commands at MAX_SET_INTERVAL
+    this.interval = setInterval(() => this.getblockchaininfo(), MAX_SET_INTERVAL);
   }
 
-  refresh = () => {
-    fetch('http://localhost:8080/api/getblockchaininfo/')
-    .then(response => response.json())
-    .then(data => this.setState({ data }));
+  // Put this inside Peercoin component too
+  handleError = (error) => {
 
-    fetch('http://localhost:8080/api/minting')
-    .then(response => response.json())
-    .then(minting => this.setState({ minting }));
+    if ( error.code = -28 ) {
+      this.errorMessage = error.message;
+    }
+  }
 
-    fetch('http://localhost:8080/api/getwalletinfo')
-    .then(response => response.json())
-    .then(wallet => this.setState({ wallet }));
-
-    fetch('http://localhost:8080/api/listaddressgroupings')
-    .then(response => response.json())
-    .then(addresses => this.setState({ addresses }));
-
-    if ( this.state.data != null ) {
-      this.state.percent = this.state.data.verificationprogress;
-      this.state.percent = this.state.percent * 100;
+  // make an external component for it called (PeercoinComponent with more usefuls methods)
+  getblockchaininfo = () => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
     }
 
-    console.log(this.state);
+    var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }';
+
+    axios.post('http://192.168.0.120:9902', data)
+    .then((response) => {
+
+      this.blockchaininfo = response.data.result;
+      this.setState({ blocks: this.blockchaininfo.blocks });
+      this.updatePercentage(this.blockchaininfo.verificationprogress);
+    })
+    .catch(error => {
+      if (!error.response) {
+          // network error
+          this.state.errorStatus = 'Error: Network Error';
+      } else {
+          this.state.errorStatus = error.response.data.message;
+      }
+    })
   }
 
-  showWalletConfirm = () => {
-    this.props.history.push('/create');
-  }
 
-  showWalletUnlock = () => {
-    this.props.history.push('/unlock');
+  updatePercentage(progress) {
+    console.log(this.state.percentage);
+    this.setState({ percentage : progress * 100 });
   }
+  
+  listminting = () => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
+    }
+    var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "listminting", "params": [] }';
 
-  getPercent = () => {
-    return this.state.percent;
+    axios.post('http://192.168.0.120:9902', data)
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      this.state.error = error;
+      this.state.hasError = true;
+      this.handleError(error);
+    });
   }
 
   increase = () => {
 
-    const percent = this.state.percent;
-    var increment = this.state.percent + 0.5;
-
-    if ( percent == MAX_PERCENTAGE ) {
-      return percent;
-    }
-
-    this.setState({
-      percent: increment
-    });
+    this.getblockchaininfo();
   }
 
   render() {
@@ -86,12 +107,14 @@ class LoginContainer extends PureComponent {
         <Layout>
           <Content className="main">
             <div className="pulse"></div>
-            <CircularProgressbarWithChildren value={this.getPercent()}
-                    strokeWidth={0.3}
+            {this.state.hasError}
+            <CircularProgressbarWithChildren value={this.state.percentage}
+                    strokeWidth={0.5}
                     styles={buildStyles({
                       textColor: 'black',
                       pathColor: 'white',
                       trailColor: '#3cb054',
+                      pathTransitionDuration: 1
                     })}
                   >
                     {/* Put any JSX content in here that you'd like. It'll be vertically and horizonally centered. */}
@@ -104,8 +127,8 @@ class LoginContainer extends PureComponent {
 
             <Row className="wallet_btn_area">
               <Col className="wallet_label center" sm={{ span: 12, offset: 6 }}>
-                <span>Updating blockchain</span>
-                <button onClick={this.increase}></button>
+                <span>{this.state.blocks}</span><br></br>
+                <span>{this.state.percentage} %</span><br></br>
               </Col>
             </Row>
           </Content>

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import LoginContainer from 'containers/LoginContainer/LoginContainer';
+import MintingContainer from 'containers/MintingContainer/MintingContainer';
 import MainWalletContainer from 'containers/MainWalletContainer/MainWalletContainer';
 
 class RoutesContainer extends PureComponent {
@@ -9,8 +10,8 @@ class RoutesContainer extends PureComponent {
     return (
       <Switch>
         <Route exact path="/login" component={LoginContainer} />
+        <Route exact path="/mints" component={MintingContainer} />
         <Route exact path="/wallet" component={MainWalletContainer} />
-        <Route path="/" component={LoginContainer} />
         <Redirect to="/404" />
       </Switch>
     );

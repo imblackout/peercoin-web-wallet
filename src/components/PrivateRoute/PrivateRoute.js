@@ -12,7 +12,7 @@ class PrivateRoute extends Component {
     }
 
     return (
-      <Redirect to="/login" />
+      <Route {...props} />
     );
   }
 }

@@ -16,8 +16,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div className="App">
-            <div className="content">
+          <div>
+            <div>
               <Switch>
                 <Route path="/login" exact component={LoginContainer} />
                 <Route exact path="/create" component={WalletConfirmContainer} />

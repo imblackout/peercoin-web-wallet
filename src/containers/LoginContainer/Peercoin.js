@@ -2,6 +2,11 @@ import axios from "axios";
 
 class Peercoin {
 
+    // Put this in config in some ways
+    config = {
+        PEERCOIN_RPC_HOST: 'http://192.168.0.120:9902'
+    };
+
     /*
     * Will show debug as console.info
     */
@@ -16,14 +21,80 @@ class Peercoin {
     // RPC Command result for getbalance
     balance = null;
 
+    walletinfo = null;
+
     errorStatus = null;
 
     mints = null;
 
     constructor() {
-      // TO REFACTOR HERE
-      this.remoteHost = "http://192.168.0.120:9902";
+      this.remoteHost = this.config.PEERCOIN_RPC_HOST;
+    }
+
+    async listtransactions() {
+      // Refactor this to a function so we can call like
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
       }
+      var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "listtransactions", "params": [] }';
+
+      return await axios.post(this.remoteHost, data)
+      .then((response) => {
+        this.transactions = response.data.result;
+        if ( this.debugMode ) {
+          console.info('----------- debug mode ---------');
+          console.info('----------- listtransactions ---------');
+          console.info(this.transactions);
+        }
+        return this.transactions;
+      })
+      .catch(error => {
+        if (!error.response) {
+            // network error
+            this.errorStatus = 'Error: Network Error';
+            if ( this.debugMode ) {
+              console.info('----------- debug mode ---------');
+              console.info(this.errorStatus);
+            }
+        } else {
+            this.errorStatus = error.response.data.message;
+        }
+      })
+  }
+
+
+    async getwalletinfo() {
+        // Refactor this to a function so we can call like
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
+        }
+        var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "getwalletinfo", "params": [] }';
+
+        return await axios.post(this.remoteHost, data)
+        .then((response) => {
+          this.walletInfo = response.data.result;
+          if ( this.debugMode ) {
+            console.info('----------- debug mode ---------');
+            console.info('----------- getwalletinfo ---------');
+            console.info(this.walletInfo);
+          }
+          return this.walletInfo;
+        })
+        .catch(error => {
+          if (!error.response) {
+              // network error
+              this.errorStatus = 'Error: Network Error';
+              if ( this.debugMode ) {
+                console.info('----------- debug mode ---------');
+                console.info(this.errorStatus);
+              }
+          } else {
+              this.errorStatus = error.response.data.message;
+          }
+        })
+    }
 
     // Refactor every functions to use rpc.queryMethod()
 
@@ -33,7 +104,7 @@ class Peercoin {
     * As JSON
     * return this.mints property
     */
-   listminting() {
+   async listminting() {
 
     // Refactor this to a function so we can call like
     // rpc.queryMethod("getbalance") 
@@ -43,7 +114,7 @@ class Peercoin {
     }
     var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "listminting", "params": [] }';
 
-    axios.post(this.remoteHost, data)
+    return await axios.post(this.remoteHost, data)
     .then((response) => {
       this.mints = response.data.result;
       if ( this.debugMode ) {

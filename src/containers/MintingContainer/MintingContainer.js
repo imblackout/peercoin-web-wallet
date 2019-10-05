@@ -1,14 +1,24 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Layout } from 'antd';
-import axios from "axios";
+
+// Change this namespace
 import Peercoin from 'containers/LoginContainer/Peercoin';
+import ApexCharts from 'apexcharts'
+
 
 import {
   CircularProgressbarWithChildren,
   buildStyles,
 } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
+import AwesomeSlider from 'react-awesome-slider';
+import 'react-awesome-slider/dist/styles.css';
+
+// Radial separators
+import RadialSeparators from 'containers/MintingContainer/RadialSeparators';
+import SimpleSlider from './SimpleSlider';
 
 const { Content } = Layout;
 
@@ -21,120 +31,109 @@ class MintingContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-
-      // Show percentage on circular display
-      // Default at 0
-      percentage: 0,
-      
-      // In px
-      leaf_size: 200,
-
-      // API's result from RPC command line
-      blockchaininfo:null,
-      blocks:0,
-
-      // Peercoin's API error message
-      errorMessage:null,
-      errorStatus:null
+      mints: [
+        {
+          address:"1234"
+        }
+      ],
+      result:[],
+      mintsDisplay:[
+        {
+          "account": "",
+          "address": "PXbgh6DtoYazDa1HW83AQuTJrpqsgoLZXy",
+          "age-in-day": "18",
+          "amount": "400359000",
+          "attempts": 0,
+          "coin-day-weight": "0",
+          "input-txid": "00522750c5b8cef43913b751bfd6a154776a77ce19743e5174ad31b252b7f523",
+          "minting-probability-10min": 0,
+          "minting-probability-24h": 0,
+          "minting-probability-30d": 0.1882962362346187,
+          "minting-probability-90d": 0.9794815281721343,
+          "proof-of-stake-difficulty": 5.905860146560868,
+          "search-interval-in-sec": 0,
+          "status": "immature",
+          "time": "1568601003",
+        }
+      ]
     };
 
+    // Put this host in config file
     this.peercoin = new Peercoin("http://192.168.0.120:9902");
-    this.peercoin.getblockchaininfo();
 
     // Call RPC commands at MAX_SET_INTERVAL
-    this.interval = setInterval(() => this.getblockchaininfo(), MAX_SET_INTERVAL);
+    this.interval = setInterval(() => this.updateMints(), MAX_SET_INTERVAL);
   }
 
-  // Put this inside Peercoin component too
-  handleError = (error) => {
-
-    if ( error.code = -28 ) {
-      this.errorMessage = error.message;
-    }
+  componentDidMount() {
+    this.updateMints();
   }
 
-  // make an external component for it called (PeercoinComponent with more usefuls methods)
-  getblockchaininfo = () => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
-    }
+  updateMints = () => {
+    console.log('updatemints');
+    let mints = this.peercoin.listminting();
 
-    var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }';
-
-    axios.post('http://192.168.0.120:9902', data)
-    .then((response) => {
-
-      this.blockchaininfo = response.data.result;
-      this.setState({ blocks: this.blockchaininfo.blocks });
-      this.updatePercentage(this.blockchaininfo.verificationprogress);
-    })
-    .catch(error => {
-      if (!error.response) {
-          // network error
-          this.state.errorStatus = 'Error: Network Error';
-      } else {
-          this.state.errorStatus = error.response.data.message;
-      }
-    })
-  }
-
-
-  updatePercentage(progress) {
-    console.log(this.state.percentage);
-    this.setState({ percentage : progress * 100 });
-  }
-  
-  listminting = () => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic YmxhY2tvdXQ6MTIzNA=='
-    }
-    var data = '{"jsonrpc": "1.0", "id":"curltest", "method": "listminting", "params": [] }';
-
-    axios.post('http://192.168.0.120:9902', data)
-    .then((response) => {
-      console.log(response);
-    }, (error) => {
-      this.state.error = error;
-      this.state.hasError = true;
-      this.handleError(error);
+    // After promise call
+    // Store result variable into the state
+    // for future display
+    mints.then(result => {
+        this.setState({mintsDisplay: result});
+    }, function(err) {
+      // Error: "It broke"
+      console.log(err); 
     });
   }
 
-  increase = () => {
-
-    this.getblockchaininfo();
-  }
-
+  
   render() {
+
+    // Make this *** loop over mints
+    const elements = []
+    const items = []
+
+    console.log("what is mintsDisplay");
+    console.log(this.state.mintsDisplay);
+
+    this.mints = this.state.mintsDisplay.map((mint, key) =>
+      <CircularProgressbarWithChildren
+      value={mint['age-in-day'] * 100 / 30} // age in day maxed out to 30 days
+      text={`${mint['amount'] / 1000000} PPC , ${mint['age-in-day']} ${mint['attempts']}`}
+      strokeWidth={1}
+      radioCircle={0.9}
+      styles={buildStyles({
+        // Rotation of path and trail, in number of turns (0-1)
+        rotation: 0.25,
+     
+        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+        strokeLinecap: 'round',
+     
+        // Text size
+        textSize: '10px',
+     
+        // How long animation takes to go from one percentage to another, in seconds
+        pathTransitionDuration: 300,
+     
+        // Can specify path transition in more detail, or remove it entirely
+        // pathTransition: 'none',
+     
+        // Colors
+        pathColor: `rgba(0, 152, 0, ${mint['age-in-day'] * 100 / 30})`,
+        textColor: '#7ae072',
+        trailColor: '#7ae072',
+        backgroundColor: '#7ae072',
+      })}
+    >
+    </CircularProgressbarWithChildren>
+  );
+
     return (
       <div className="block">
         <Layout>
           <Content className="main">
             <div className="pulse"></div>
-            {this.state.hasError}
-            <CircularProgressbarWithChildren value={this.state.percentage}
-                    strokeWidth={0.5}
-                    styles={buildStyles({
-                      textColor: 'black',
-                      pathColor: 'white',
-                      trailColor: '#3cb054',
-                      pathTransitionDuration: 1
-                    })}
-                  >
-                    {/* Put any JSX content in here that you'd like. It'll be vertically and horizonally centered. */}
-                    <img
-                      style={{ width: this.state.leaf_size , marginTop: -5 }}
-                      src="https://www.peercoin.net/img/logos/icononly/outsidecircle/Transparent/WhiteLeaf/peercoin-leaf-white-transparent.svg"
-                      alt="peercoin"
-                    />
-            </CircularProgressbarWithChildren>
-
             <Row className="wallet_btn_area">
               <Col className="wallet_label center" sm={{ span: 12, offset: 6 }}>
-                <span>{this.state.blocks}</span><br></br>
-                <span>{this.state.percentage} %</span><br></br>
+                {this.mints}
               </Col>
             </Row>
           </Content>

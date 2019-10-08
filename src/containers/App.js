@@ -10,14 +10,15 @@ import WalletConfirmContainer from 'containers/WalletConfirmContainer/WalletConf
 import KeystoreUploadContainer from 'containers/KeystoreUploadContainer/KeystoreUploadContainer';
 
 import 'css/index.scss';
+import Dashboard from './WalletContainer/Dashboard';
 
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <Router>
-          <div>
-            <div>
+          <div className="App">
+            <div className="content">
               <Switch>
                 <Route path="/login" exact component={LoginContainer} />
                 <Route exact path="/create" component={WalletConfirmContainer} />

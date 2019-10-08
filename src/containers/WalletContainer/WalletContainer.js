@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import SimpleCard from './SimpleCard.js';
 import FolderList from './FolderList.js';
 import ListItem from './ListItem.js';
+import Dashboard from './Dashboard.js';
 
 // Change this namespace
 import Peercoin from 'containers/LoginContainer/Peercoin';
@@ -55,9 +56,6 @@ class WalletContainer extends PureComponent {
         this.setState({ transactions: result });
     });
 
-    console.log('state');
-    console.log(this.state.transactions);
-    console.log(this.state.wallet);
   }
 
   
@@ -70,18 +68,7 @@ class WalletContainer extends PureComponent {
     );
 
     return (
-        <Layout>
-            <Content className="main">
-            <Row>
-                <Col sm={{ span: 12, offset: 6 }}>
-                    <h1>{this.state.wallet.balance} (Immature {this.state.wallet.immature_balance}) PPC</h1>
-                </Col>
-                <Col>
-                    <h2>{this.transactions}</h2>
-                </Col>
-            </Row>
-            </Content>
-        </Layout>
+        <Dashboard transactions={this.transactions}></Dashboard>
     );
   }
 }

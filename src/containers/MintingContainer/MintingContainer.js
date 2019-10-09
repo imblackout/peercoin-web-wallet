@@ -5,7 +5,13 @@ import { Row, Col, Layout } from 'antd';
 // Change this namespace
 import Peercoin from 'containers/LoginContainer/Peercoin';
 import ApexCharts from 'apexcharts'
+import MintingView from '../WalletContainer/MintingView.js';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { ListItemSecondaryAction } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
 
 import {
   CircularProgressbarWithChildren,
@@ -87,58 +93,24 @@ class MintingContainer extends PureComponent {
   
   render() {
 
-    // Make this *** loop over mints
-    const elements = []
-    const items = []
-
-    console.log("what is mintsDisplay");
-    console.log(this.state.mintsDisplay);
-
     this.mints = this.state.mintsDisplay.map((mint, key) =>
-      <CircularProgressbarWithChildren
-      value={mint['age-in-day'] * 100 / 30} // age in day maxed out to 30 days
-      text={`${mint['amount'] / 1000000} PPC , ${mint['age-in-day']} ${mint['attempts']}`}
-      strokeWidth={1}
-      radioCircle={0.9}
-      styles={buildStyles({
-        // Rotation of path and trail, in number of turns (0-1)
-        rotation: 0.25,
-     
-        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-        strokeLinecap: 'round',
-     
-        // Text size
-        textSize: '10px',
-     
-        // How long animation takes to go from one percentage to another, in seconds
-        pathTransitionDuration: 300,
-     
-        // Can specify path transition in more detail, or remove it entirely
-        // pathTransition: 'none',
-     
-        // Colors
-        pathColor: `rgba(0, 152, 0, ${mint['age-in-day'] * 100 / 30})`,
-        textColor: '#7ae072',
-        trailColor: '#7ae072',
-        backgroundColor: '#7ae072',
-      })}
-    >
-    </CircularProgressbarWithChildren>
-  );
+        <React.Fragment>
+          <List>
+              <ListItem>
+                <ListItemText primary="APR" secondary='18' />
+                <ListItemText primary={mint.address} secondary={mint.category} />
+                <ListItemText primary={mint['age-in-day']} />
+                <ListItemSecondaryAction>
+                    <ListItemText primary={mint.attempts} />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
+        </React.Fragment>
+    );
 
     return (
-      <div className="block">
-        <Layout>
-          <Content className="main">
-            <div className="pulse"></div>
-            <Row className="wallet_btn_area">
-              <Col className="wallet_label center" sm={{ span: 12, offset: 6 }}>
-                {this.mints}
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
-      </div>
+      <MintingView mints={this.mints}></MintingView>
     );
   }
 }

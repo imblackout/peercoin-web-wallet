@@ -27,7 +27,7 @@ class LoginContainer extends PureComponent {
       percentage: 0,
       
       // In px
-      leaf_size: 200,
+      leaf_size: 100,
 
       // API's result from RPC command line
       blockchaininfo:null,
@@ -112,7 +112,6 @@ class LoginContainer extends PureComponent {
       <div className="block">
         <Layout>
           <Content className="main">
-            <div className="pulse"></div>
             {this.state.hasError}
             <CircularProgressbarWithChildren value={this.state.percentage}
                     strokeWidth={0.5}
@@ -131,10 +130,9 @@ class LoginContainer extends PureComponent {
                     />
             </CircularProgressbarWithChildren>
 
-            <Row className="wallet_btn_area">
-              <Col className="wallet_label center" sm={{ span: 12, offset: 6 }}>
-                <span>{this.state.blocks}</span><br></br>
-                <span>{this.state.percentage} %</span><br></br>
+            <Row>
+              <Col className="center" sm={{ span: 12, offset: 6 }}>
+                <span>{this.state.percentage.toFixed(0) }</span><br></br>
               </Col>
             </Row>
           </Content>

@@ -10,6 +10,7 @@ import WalletConfirmContainer from 'containers/WalletConfirmContainer/WalletConf
 import KeystoreUploadContainer from 'containers/KeystoreUploadContainer/KeystoreUploadContainer';
 
 import 'css/index.scss';
+import Dashboard from './WalletContainer/Dashboard';
 
 class App extends Component {
   render() {

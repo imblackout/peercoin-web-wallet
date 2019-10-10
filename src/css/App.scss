@@ -2,66 +2,50 @@
   font-family: 'MarkPro';
   font-style: normal;
   font-weight: 400;
-  src: url('../assets/fonts/MarkPro.woff'); /* IE9 Compat Modes */
+  src: url('../assets/fonts/MarkPro.woff2'); /* IE9 Compat Modes */
   src: local('MarkPro'), local('MarkPro'),
-       url('../assets/fonts/MarkPro.woff') format('woff2'), /* Super Modern Browsers */
-       url('../assets/fonts/MarkPro.woff') format('woff'), /* Modern Browsers */
+       url('../assets/fonts/MarkPro.woff2') format('woff2') /* Super Modern Browsers */
 }
+
+@font-face {
+  font-family: 'MarkPro';
+  font-style: medium;
+  font-weight: 400;
+  src: url('../assets/fonts/MarkPro_Medium.woff2'); /* IE9 Compat Modes */
+  src: local('MarkPro'), local('MarkPro'),
+       url('../assets/fonts/MarkPro_Medium.woff2') format('woff2') /* Super Modern Browsers */
+}
+
+@font-face {
+  font-family: 'MarkPro';
+  font-style: bold;
+  font-weight: 400;
+  src: url('../assets/fonts/MarkPro_Bold.woff2'); /* IE9 Compat Modes */
+  src: local('MarkPro'), local('MarkPro'),
+       url('../assets/fonts/MarkPro_Bold.woff2') format('woff2') /* Super Modern Browsers */
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: bold;
+  font-weight: 400;
+  src: url('../assets/fonts/roboto-v20-latin-regular.woff'); /* IE9 Compat Modes */
+  src: local('MarkPro'), local('MarkPro'),
+       url('../assets/fonts/roboto-v20-latin-regular.woff') format('woff2') /* Super Modern Browsers */
+}
+
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'MarkPro';
+  font-family: 'Roboto';
   font-weight: bold;
   font-style: bold;
   background-color: $white;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  font-family: 'MarkPro';
+h1, h2, h3, h4, h5, h6, p, span {
+  font-family: 'Roboto';
   margin: 0px;
-}
-
-.App {
-  display: table;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-
-  .content {
-    display: table-cell;
-    vertical-align: middle;
-    margin: auto;
-    width: 550px;
-    height: 600px;
-    padding: 0px 20px;
-    margin-bottom: 72px;
-    background-color: #3cb054;
-
-    .ant-layout {
-      background-color: #3cb054;
-    }
-
-    .ant-layout-header {
-      background-color: $white;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .invalid_msg {
-      color: $red;
-    }
-
-    .success_msg {
-      color: $btn-bg-color;
-    }
-
-    .selected {
-      background-color: $btn-bg-color !important;
-      color: $white !important;
-      border: none !important;
-    }
-  }
+  font-size: 4em;
 }

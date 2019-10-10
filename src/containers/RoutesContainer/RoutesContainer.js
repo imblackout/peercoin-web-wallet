@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import LoginContainer from 'containers/LoginContainer/LoginContainer';
 import MintingContainer from 'containers/MintingContainer/MintingContainer';
-import MainWalletContainer from 'containers/MainWalletContainer/MainWalletContainer';
+import WalletContainer from 'containers/WalletContainer/WalletContainer';
 
 class RoutesContainer extends PureComponent {
   render() {
@@ -11,7 +11,7 @@ class RoutesContainer extends PureComponent {
       <Switch>
         <Route exact path="/login" component={LoginContainer} />
         <Route exact path="/mints" component={MintingContainer} />
-        <Route exact path="/wallet" component={MainWalletContainer} />
+        <Route exact path="/wallet" component={WalletContainer} />
         <Redirect to="/404" />
       </Switch>
     );

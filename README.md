@@ -15,3 +15,5 @@ Run the following commands to setup on localhost:
 npm install
 npm start
 ```
+=======
+# peercoin-web-wallet
